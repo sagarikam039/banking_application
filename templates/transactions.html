@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transaction History</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <h2>Transaction History</h2>
+
+        <table border="1" width="100%" cellpadding="10">
+
+            <tr>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+
+            {% for transaction in transactions %}
+
+            <tr>
+                <td>{{ transaction.transaction_type }}</td>
+                <td>${{ transaction.amount }}</td>
+                <td>{{ transaction.created_at }}</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        <br>
+
+        <a href="/accounts/account/">Back to Account</a>
+
+    </div>
+
+</body>
+</html>

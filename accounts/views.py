@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import BankAccount
+from .models import BankAccount, Transaction
 import random
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
@@ -48,6 +48,7 @@ def deposit_money(request):
         
         account.balance += amount
         account.save()
+        Transaction.objects.create(account=account, transaction_type='DEPOSIT', amount=amount)
         return redirect('account')
     return render(request, 'deposit.html')
 
@@ -61,7 +62,16 @@ def withdraw_money(request):
         if account.balance >= amount:
             account.balance = account.balance - amount
             account.save()
+            Transaction.objects.create(account=account, transaction_type='WITHDRAW', amount=amount)
 
         return redirect('account')
 
     return render(request, 'withdraw.html')
+
+@login_required
+def transaction_history(request):
+    account = BankAccount.objects.get(user=request.user)
+
+    transactions = Transaction.objects.filter(account=account).order_by('-created_at')
+
+    return render(request, 'transactions.html', {'transactions': transactions})
