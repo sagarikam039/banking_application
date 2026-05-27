@@ -6,6 +6,10 @@ from .models import BankAccount, Transaction
 import random
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import BankAccountSerializer, TransactionSerializer
 
 def home(request):
     return render(request, 'home.html')
@@ -28,6 +32,7 @@ def register(request):
         user = User.objects.create_user(username=username, email=email, password=password)
         acc_number = random.randint(1000000000, 9999999999)
         BankAccount.objects.create(user=user, account_number=acc_number)
+        messages.success(request, 'Account created successfully.')
         return redirect('home')
     return render(request, 'register.html')
 
@@ -118,3 +123,106 @@ def transfer_money(request):
             pass
 
     return render(request, 'transfer.html')
+
+@api_view(['GET'])
+def account_api(request):
+
+    accounts = BankAccount.objects.all()
+
+    serializer = BankAccountSerializer(accounts, many=True)
+
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def deposit_api(request):
+
+    account_number = request.data.get('account_number')
+    amount = Decimal(request.data.get('amount'))
+
+    account = BankAccount.objects.get(account_number=account_number)
+
+    account.balance = account.balance + amount
+    account.save()
+
+    Transaction.objects.create(
+        account=account,
+        transaction_type='DEPOSIT',
+        amount=amount
+    )
+
+    return Response({
+        'message': 'Amount deposited successfully',
+        'account_number': account.account_number,
+        'updated_balance': account.balance
+    })
+
+@api_view(['POST'])
+def withdraw_api(request):
+
+    account_number = request.data.get('account_number')
+    amount = Decimal(request.data.get('amount'))
+
+    account = BankAccount.objects.get(account_number=account_number)
+
+    if account.balance >= amount:
+
+        account.balance = account.balance - amount
+        account.save()
+
+        Transaction.objects.create(
+            account=account,
+            transaction_type='WITHDRAW',
+            amount=amount
+        )
+
+        return Response({
+            'message': 'Amount withdrawn successfully',
+            'account_number': account.account_number,
+            'updated_balance': account.balance
+        })
+
+    return Response({
+        'message': 'Insufficient balance'
+    })
+
+@api_view(['POST'])
+def transfer_api(request):
+
+    sender_account_number = request.data.get('sender_account')
+    receiver_account_number = request.data.get('receiver_account')
+    amount = Decimal(request.data.get('amount'))
+
+    sender_account = BankAccount.objects.get(account_number=sender_account_number)
+    receiver_account = BankAccount.objects.get(account_number=receiver_account_number)
+
+    if sender_account.balance >= amount:
+
+        sender_account.balance = sender_account.balance - amount
+        receiver_account.balance = receiver_account.balance + amount
+
+        sender_account.save()
+        receiver_account.save()
+
+        Transaction.objects.create(
+            account=sender_account,
+            transaction_type='TRANSFER_SENT',
+            amount=amount
+        )
+
+        Transaction.objects.create(
+            account=receiver_account,
+            transaction_type='TRANSFER_RECEIVED',
+            amount=amount
+        )
+
+        return Response({
+            'message': 'Amount transferred successfully',
+            'sender_account': sender_account.account_number,
+            'receiver_account': receiver_account.account_number,
+            'transferred_amount': amount,
+            'sender_updated_balance': sender_account.balance
+        })
+
+    return Response({
+        'message': 'Insufficient balance'
+    })

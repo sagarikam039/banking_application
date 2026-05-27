@@ -71,3 +71,14 @@ p {
     cursor: pointer;
 }
 
+
+.message {
+    width: 50%;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #d4edda;
+    color: #155724;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+}

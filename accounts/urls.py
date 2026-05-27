@@ -12,4 +12,8 @@ urlpatterns = [
     path('withdraw/', views.withdraw_money, name='withdraw'),
     path('transactions/', views.transaction_history, name='transactions'),
     path('transfer/', views.transfer_money, name='transfer'),
+    path('api/accounts/', views.account_api, name='account_api'),
+    path('api/deposit/', views.deposit_api, name='deposit_api'),
+    path('api/withdraw/', views.withdraw_api, name='withdraw_api'),
+    path('api/transfer/', views.transfer_api, name='transfer_api'),
 ]
