@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transfer Money</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <h2>Transfer Money</h2>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <input type="text"
+                   name="receiver_account"
+                   placeholder="Enter Receiver Account Number">
+
+            <input type="number"
+                   name="amount"
+                   placeholder="Enter Amount"
+                   step="0.01">
+
+            <button type="submit">
+                Transfer
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="{% url 'account' %}">
+            Back to Account
+        </a>
+
+    </div>
+
+</body>
+</html>

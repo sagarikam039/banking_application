@@ -75,3 +75,46 @@ def transaction_history(request):
     transactions = Transaction.objects.filter(account=account).order_by('-created_at')
 
     return render(request, 'transactions.html', {'transactions': transactions})
+
+@login_required
+def transfer_money(request):
+
+    sender_account = BankAccount.objects.get(user=request.user)
+
+    if request.method == 'POST':
+
+        receiver_account_number = request.POST.get('receiver_account')
+
+        amount = Decimal(request.POST.get('amount'))
+
+        try:
+            receiver_account = BankAccount.objects.get(
+                account_number=receiver_account_number
+            )
+
+            if sender_account.balance >= amount:
+
+                sender_account.balance -= amount
+                receiver_account.balance += amount
+
+                sender_account.save()
+                receiver_account.save()
+
+                Transaction.objects.create(
+                    account=sender_account,
+                    transaction_type='TRANSFER_SENT',
+                    amount=amount
+                )
+
+                Transaction.objects.create(
+                    account=receiver_account,
+                    transaction_type='TRANSFER_RECEIVED',
+                    amount=amount
+                )
+
+                return redirect('account')
+
+        except BankAccount.DoesNotExist:
+            pass
+
+    return render(request, 'transfer.html')

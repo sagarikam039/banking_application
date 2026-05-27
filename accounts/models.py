@@ -22,6 +22,8 @@ class Transaction(models.Model):
     TRANSACTION_TYPES = [
         ('DEPOSIT', 'Deposit'),
         ('WITHDRAW', 'Withdraw'),
+        ('TRANSFER_SENT', 'Transfer Sent'),
+        ('TRANSFER_RECEIVED', 'Transfer Received'),
     ]
 
     account = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
