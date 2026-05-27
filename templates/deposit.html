@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deposit Money</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Deposit Money</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="number" name="amount" placeholder="Enter amount" step="0.01">
+
+            <button type="submit">Deposit</button>
+        </form>
+
+        <br>
+        <a href="/accounts/account/">Back to Account</a>
+    </div>
+
+</body>
+</html>

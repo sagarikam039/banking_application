@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Banking Application</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav>
+        <h2> My Banking App</h2>
+        <ul>
+
+    <li><a href="/">Home</a></li>
+
+    {% if user.is_authenticated %}
+
+        <li><a href="/accounts/logout/">Logout</a></li>
+
+    {% else %}
+
+        <li><a href="/accounts/register/">Register</a></li>
+
+        <li><a href="/accounts/login/">Login</a></li>
+
+    {% endif %}
+
+        </ul>
+    </nav>
+
+    <div class="container">
+        {% if user.is_authenticated %}
+    <h1>Welcome, {{ user.username }}</h1>
+    <p>You are successfully logged in.</p>
+{% else %}
+    <h1>Welcome to Banking Application</h1>
+    <p>Secure Banking and Transaction Management System</p>
+{% endif %}
+    </div>
+
+</body>
+</html>
