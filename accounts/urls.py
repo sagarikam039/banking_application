@@ -1,6 +1,10 @@
 from django.urls import path
-
+from django.contrib import admin
 from . import views
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -16,4 +20,8 @@ urlpatterns = [
     path('api/deposit/', views.deposit_api, name='deposit_api'),
     path('api/withdraw/', views.withdraw_api, name='withdraw_api'),
     path('api/transfer/', views.transfer_api, name='transfer_api'),
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 ]

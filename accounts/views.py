@@ -10,6 +10,8 @@ from django.contrib import messages
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import BankAccountSerializer, TransactionSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 def home(request):
     return render(request, 'home.html')
@@ -124,7 +126,9 @@ def transfer_money(request):
 
     return render(request, 'transfer.html')
 
+
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def account_api(request):
 
     accounts = BankAccount.objects.all()
@@ -134,6 +138,7 @@ def account_api(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def deposit_api(request):
 
     account_number = request.data.get('account_number')
@@ -157,6 +162,7 @@ def deposit_api(request):
     })
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def withdraw_api(request):
 
     account_number = request.data.get('account_number')
@@ -186,6 +192,7 @@ def withdraw_api(request):
     })
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def transfer_api(request):
 
     sender_account_number = request.data.get('sender_account')
