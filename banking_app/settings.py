@@ -98,8 +98,6 @@ else:
             'PORT': os.getenv('DB_PORT'),
         }
     }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
