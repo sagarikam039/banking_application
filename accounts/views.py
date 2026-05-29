@@ -36,12 +36,30 @@ def register(request):
         if password1 != password2:
             messages.error(request, 'Passwords do not match.')
             return redirect('register')
-        
-        user = User.objects.create_user(username=username, email=email, password=password)
-        acc_number = random.randint(1000000000, 9999999999)
-        BankAccount.objects.create(user=user, account_number=acc_number)
-        messages.success(request, 'Account created successfully.')
-        return redirect('home')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists.')
+            return redirect('register')
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1
+        )
+
+        acc_number = str(random.randint(1000000000, 9999999999))
+
+        while BankAccount.objects.filter(account_number=acc_number).exists():
+            acc_number = str(random.randint(1000000000, 9999999999))
+
+        BankAccount.objects.create(
+            user=user,
+            account_number=acc_number
+        )
+
+        messages.success(request, 'Account created successfully. Please login.')
+        return redirect('login')
+
     return render(request, 'register.html')
 
 def logout_user(request):
