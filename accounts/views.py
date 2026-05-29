@@ -30,7 +30,13 @@ def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
-        password = request.POST.get('password')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match.')
+            return redirect('register')
+        
         user = User.objects.create_user(username=username, email=email, password=password)
         acc_number = random.randint(1000000000, 9999999999)
         BankAccount.objects.create(user=user, account_number=acc_number)
