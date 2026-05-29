@@ -41,6 +41,7 @@ jobs:
         env:
           SECRET_KEY: github-actions-secret-key
           DEBUG: True
+          DATABASE_URL: postgres://postgres:postgres123@localhost:5432/banking_db
           DB_NAME: banking_db
           DB_USER: postgres
           DB_PASSWORD: postgres123
