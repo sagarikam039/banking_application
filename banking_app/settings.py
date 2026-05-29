@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')  #"django-insecure-!9k)fg!)#k*+0+)s@aa_or=g
 DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
-    "banking-application-1-v19z.onrender.com",
+    ".onrender.com",
     "localhost",
     "127.0.0.1",
 ]
