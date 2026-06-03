@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import BankAccount, Transaction
+from .ml_utils import predict_fraud_risk
 import random
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
@@ -269,6 +270,8 @@ def transfer_api(request):
     return Response({
         'message': 'Insufficient balance'
     })
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def risk_analyzer_api(request):
@@ -279,33 +282,39 @@ def risk_analyzer_api(request):
 
     total_transactions = transactions.count()
 
-    total_withdrawals = transactions.filter(transaction_type='WITHDRAW').count()
+    total_withdrawals = transactions.filter(
+        transaction_type='WITHDRAW'
+    ).count()
 
-    total_transfers = transactions.filter(transaction_type='TRANSFER_SENT').count()
+    total_transfers = transactions.filter(
+        transaction_type='TRANSFER_SENT'
+    ).count()
 
-    balance = account.balance
-
-    risk_level = "Low Risk"
+    risk_level = predict_fraud_risk(
+        account.balance,
+        total_transactions,
+        total_withdrawals,
+        total_transfers
+    )
 
     reason = "Your account activity looks normal."
 
-    if balance < 500 or total_withdrawals > 5 or total_transfers > 5:
-        risk_level = "High Risk"
-        reason = "Your balance is low or there are many outgoing transactions."
+    if risk_level == "Medium":
+        reason = "Your account has moderate transaction activity."
 
-    elif balance < 2000 or total_withdrawals > 2 or total_transfers > 2:
-        risk_level = "Medium Risk"
-        reason = "Your account has moderate outgoing activity."
+    elif risk_level == "High":
+        reason = "Your account has high outgoing transaction activity."
 
     return Response({
         "username": request.user.username,
-        "balance": balance,
+        "balance": str(account.balance),
         "total_transactions": total_transactions,
         "total_withdrawals": total_withdrawals,
         "total_transfers": total_transfers,
         "risk_level": risk_level,
         "reason": reason
     })
+
 
 @api_view(['POST'])
 def register_api(request):
