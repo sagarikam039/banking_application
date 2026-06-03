@@ -1,0 +1,174 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f7fc;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.navbar {
+  background: #0d6efd;
+  color: white;
+  padding: 18px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h2 {
+  margin: 0;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  background-color: #0d6efd;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #0b5ed7;
+}
+
+.hero {
+  max-width: 900px;
+  margin: 80px auto;
+  background: white;
+  padding: 50px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+}
+
+.hero h1 {
+  color: #0d6efd;
+  font-size: 42px;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #555;
+}
+
+.hero-buttons {
+  margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .navbar div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .navbar button {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .hero {
+    margin: 40px 20px;
+    padding: 30px 20px;
+  }
+
+  .hero h1 {
+    font-size: 30px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero-buttons button {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+  margin: auto;
+}
+
+.form-container input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.form-container button {
+  margin-left: 0;
+}
+
+.risk-card {
+  margin-top: 30px;
+  padding: 25px;
+  border-radius: 15px;
+  background: #eef5ff;
+  border-left: 6px solid #0d6efd;
+  text-align: left;
+}
+
+.risk-card h2 {
+  color: #0d6efd;
+}
+
+.action-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.action-buttons button {
+  min-width: 120px;
+}
+
+.transaction-table {
+  width: 100%;
+  margin-top: 25px;
+  border-collapse: collapse;
+}
+
+.transaction-table th,
+.transaction-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.transaction-table th {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+}
+
+.logout-btn:hover {
+  background-color: #bb2d3b;
+}

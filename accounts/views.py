@@ -99,14 +99,24 @@ def withdraw_money(request):
 
     return render(request, 'withdraw.html')
 
-@login_required
-def transaction_history(request):
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def transaction_api(request):
     account = BankAccount.objects.get(user=request.user)
 
     transactions = Transaction.objects.filter(account=account).order_by('-created_at')
 
-    return render(request, 'transactions.html', {'transactions': transactions})
+    data = []
 
+    for transaction in transactions:
+        data.append({
+            "id": transaction.id,
+            "transaction_type": transaction.transaction_type,
+            "amount": transaction.amount,
+            "created_at": transaction.created_at,
+        })
+
+    return Response(data)
 @login_required
 def transfer_money(request):
 
@@ -155,11 +165,13 @@ def transfer_money(request):
 @permission_classes([IsAuthenticated])
 def account_api(request):
 
-    accounts = BankAccount.objects.all()
+    account = BankAccount.objects.get(user=request.user)
 
-    serializer = BankAccountSerializer(accounts, many=True)
-
-    return Response(serializer.data)
+    return Response({
+        "username": request.user.username,
+        "account_number": account.account_number,
+        "balance": account.balance
+    })
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -257,3 +269,71 @@ def transfer_api(request):
     return Response({
         'message': 'Insufficient balance'
     })
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def risk_analyzer_api(request):
+
+    account = BankAccount.objects.get(user=request.user)
+
+    transactions = Transaction.objects.filter(account=account)
+
+    total_transactions = transactions.count()
+
+    total_withdrawals = transactions.filter(transaction_type='WITHDRAW').count()
+
+    total_transfers = transactions.filter(transaction_type='TRANSFER_SENT').count()
+
+    balance = account.balance
+
+    risk_level = "Low Risk"
+
+    reason = "Your account activity looks normal."
+
+    if balance < 500 or total_withdrawals > 5 or total_transfers > 5:
+        risk_level = "High Risk"
+        reason = "Your balance is low or there are many outgoing transactions."
+
+    elif balance < 2000 or total_withdrawals > 2 or total_transfers > 2:
+        risk_level = "Medium Risk"
+        reason = "Your account has moderate outgoing activity."
+
+    return Response({
+        "username": request.user.username,
+        "balance": balance,
+        "total_transactions": total_transactions,
+        "total_withdrawals": total_withdrawals,
+        "total_transfers": total_transfers,
+        "risk_level": risk_level,
+        "reason": reason
+    })
+
+@api_view(['POST'])
+def register_api(request):
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password1 = request.data.get('password1')
+    password2 = request.data.get('password2')
+
+    if password1 != password2:
+        return Response({"message": "Passwords do not match"}, status=400)
+
+    if User.objects.filter(username=username).exists():
+        return Response({"message": "Username already exists"}, status=400)
+
+    user = User.objects.create_user(
+        username=username,
+        email=email,
+        password=password1
+    )
+
+    acc_number = str(random.randint(1000000000, 9999999999))
+
+    while BankAccount.objects.filter(account_number=acc_number).exists():
+        acc_number = str(random.randint(1000000000, 9999999999))
+
+    BankAccount.objects.create(
+        user=user,
+        account_number=acc_number
+    )
+
+    return Response({"message": "Account created successfully"})
