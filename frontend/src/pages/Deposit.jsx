@@ -62,8 +62,15 @@ function Deposit() {
           onChange={(e) => setAmount(e.target.value)}
           required
         />
+        
 
         <button type="submit">Deposit</button>
+
+        <div style={{ marginBottom: "20px" }}>
+          <Link to="/dashboard">
+            <button>Back to Dashboard</button>
+          </Link>
+        </div>
       </form>
     </div>
   );

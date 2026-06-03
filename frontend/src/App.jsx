@@ -10,6 +10,7 @@ import Deposit from "./pages/Deposit";
 import Withdraw from "./pages/withdraw";
 import Transfer from "./pages/Transfer";
 import Transactions from "./pages/Transactions";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -49,6 +50,12 @@ function App() {
         element={
         <ProtectedRoute>
         <Transactions />
+        </ProtectedRoute>} />
+        <Route
+        path="/profile"
+        element={
+        <ProtectedRoute>
+        <Profile />
         </ProtectedRoute>} />
       </Routes>
     </BrowserRouter>

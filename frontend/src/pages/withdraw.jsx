@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-
+import { Link } from "react-router-dom";
 function Withdraw() {
   const [accountNumber, setAccountNumber] = useState("");
   const [amount, setAmount] = useState("");
@@ -64,6 +64,12 @@ function Withdraw() {
         />
 
         <button type="submit">Withdraw</button>
+
+        <div style={{ marginTop: "20px" }}>
+          <Link to="/dashboard">
+            <button>Back to Dashboard</button>
+          </Link>
+        </div>
       </form>
     </div>
   );

@@ -337,3 +337,17 @@ def register_api(request):
     )
 
     return Response({"message": "Account created successfully"})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def profile_api(request):
+    account = BankAccount.objects.get(user=request.user)
+
+    return Response({
+        "username": request.user.username,
+        "email": request.user.email,
+        "account_number": account.account_number,
+        "balance": str(account.balance),
+        "created_at": account.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+    })

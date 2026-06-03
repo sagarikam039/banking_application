@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { Link } from "react-router-dom";
 
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -51,6 +52,11 @@ function Transactions() {
           ))}
         </tbody>
       </table>
+      <div style={{ marginTop: "20px" }}>
+        <Link to="/dashboard">
+          <button>Back to Dashboard</button>
+        </Link>
+      </div>
     </div>
   );
 }

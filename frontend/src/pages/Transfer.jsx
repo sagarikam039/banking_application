@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-
+import { Link } from "react-router-dom";
 function Transfer() {
   const [senderAccount, setSenderAccount] = useState("");
   const [receiverAccount, setReceiverAccount] = useState("");
@@ -73,6 +73,11 @@ function Transfer() {
         />
 
         <button type="submit">Transfer</button>
+        <div style={{ marginTop: "20px" }}>
+          <Link to="/dashboard">
+            <button>Back to Dashboard</button>
+          </Link>
+        </div>
       </form>
     </div>
   );

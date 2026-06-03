@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/withdraw/', views.withdraw_api, name='withdraw_api'),
     path('api/transfer/', views.transfer_api, name='transfer_api'),
     path('api/register/', views.register_api, name='register_api'),
+    path('api/profile/', views.profile_api, name='profile_api'),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
