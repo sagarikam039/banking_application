@@ -156,7 +156,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://banking-application-2-vl9z.onrender.com",
+    "https://banking-application-2-gn4e.onrender.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
