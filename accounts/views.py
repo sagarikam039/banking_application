@@ -165,15 +165,21 @@ def transfer_money(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def account_api(request):
-
-    account = BankAccount.objects.get(user=request.user)
+    account, created = BankAccount.objects.get_or_create(
+        user=request.user,
+        defaults={
+            "account_number": str(random.randint(1000000000, 9999999999)),
+            "balance": 0
+        }
+    )
 
     return Response({
         "username": request.user.username,
         "account_number": account.account_number,
-        "balance": account.balance
+        "balance": str(account.balance)
     })
 
+    
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def deposit_api(request):
